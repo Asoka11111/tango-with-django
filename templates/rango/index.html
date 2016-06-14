@@ -7,7 +7,11 @@ Index
 
 {% block body_block %}
 <h1>Rango says...</h1>
-<div>hey there partner!</div>
+{% if user.is_authenticated %}
+    <h1>What's good bruh? We back innit</h1>
+{% else %}
+    <h1>New fone who dis?</h1>
+{% endif %}
 <div>
     {% if categories %}
         <ul>
