@@ -1,5 +1,6 @@
 from django import forms
-from rango.models import Page, Category
+from django.contrib.models import User
+from rango.models import Page, Category, UserProfile
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(
@@ -8,7 +9,7 @@ class CategoryForm(forms.ModelForm):
     )
     views = forms.IntegerField(widget=forms.HiddenInput(), initial = 0)
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial = 0)
-    slug = forms.CharField(wiget=forms.HiddenInput(), required = False)
+    slug = forms.CharField(widget=forms.HiddenInput(), required = False)
 
     class Meta:
         model = Category
@@ -17,13 +18,17 @@ class CategoryForm(forms.ModelForm):
 class PageForm(forms.ModelForm):
     title = forms.CharField(
         max_length = 128,
-        help_text = "Please enter the title of the page",
+        #help_text = "Please enter the title of the page"
     )
     url = forms.URLField(
         max_length = 200,
-        help_length = "Please enter the URL of the page",
+        #help_length = "Please enter the URL of the page"
     )
     views = forms.IntegerField(widget = forms.HiddenInput(), initial=0)
+
+    class Meta:
+        model = Page
+        exclude = ('category', )
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -33,6 +38,14 @@ class PageForm(forms.ModelForm):
             cleaned_data['url'] = url
         return cleaned_data
 
+class UserForm(form.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
-        model = Page
-        exclude('category', )
+        model = User
+        fields = ('username', 'email', 'password')
+
+class UserProfileForm(form.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture')
